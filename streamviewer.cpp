@@ -154,7 +154,7 @@ void StreamViewer::resizeEvent(QResizeEvent* event){
         ui->scrollArea->resize(this->window()->width() - ui->scrollArea->pos().x() - 5, this->window()->height() - ui->scrollArea->pos().y());
 
         ui->SyncBtn->move(this->window()->width() - 110, ui->SyncBtn->pos().y());
-        ui->FilterBtn->move(this->window()->width() - 190, ui->FilterBtn->pos().y());
+        ui->FilterBtn->move(this->window()->width() - 210, ui->FilterBtn->pos().y());
         if (event->size().width() != event->oldSize().width()){
             EntryDisplayResize();
             Overwriteconfig();

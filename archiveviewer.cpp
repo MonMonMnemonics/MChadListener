@@ -110,9 +110,10 @@ void ArchiveViewer::resizeEvent(QResizeEvent* event){
         ui->scrollArea->resize(this->window()->width() - ui->scrollArea->pos().x() - 5, this->window()->height() - ui->scrollArea->pos().y());
 
         ui->SyncBtn->move(this->window()->width() - 110, ui->SyncBtn->pos().y());
-        ui->PlayBtn->move(this->window()->width() - 170, ui->PlayBtn->pos().y());
+        ui->PlayBtn->move(this->window()->width() - 160, ui->PlayBtn->pos().y());
         ui->TimeLabel->move(this->window()->width() - 250, ui->TimeLabel->pos().y());
         ui->StopBtn->move(this->window()->width() - 300, ui->StopBtn->pos().y());
+        ui->TimeLabelQuick->move(this->window()->width() - 110, ui->TimeLabelQuick->y());
         if (event->size().width() != event->oldSize().width()){
             EntryDisplayResize();
         }

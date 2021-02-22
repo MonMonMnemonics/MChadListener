@@ -32,8 +32,7 @@ SOURCES += \
     archiveviewer.cpp \
     streamviewer.cpp \
     filterandstyling.cpp \
-    windowcontrol.cpp \
-    wsselector.cpp
+    windowcontrol.cpp
 
 HEADERS += \
     login.h \
@@ -42,8 +41,7 @@ HEADERS += \
     archiveviewer.h \
     streamviewer.h \
     filterandstyling.h \
-    windowcontrol.h \
-    wsselector.h
+    windowcontrol.h
 
 FORMS += \
     login.ui \
@@ -51,8 +49,7 @@ FORMS += \
     archiveviewer.ui \
     streamviewer.ui \
     filterandstyling.ui \
-    windowcontrol.ui \
-    wsselector.ui
+    windowcontrol.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
