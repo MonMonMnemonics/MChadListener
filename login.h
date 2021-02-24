@@ -92,11 +92,13 @@ private slots:
 
     //  ARCHIVE LIST PAGE
     void ARLSearchbtn();
+    void ARLSearchbtnTag();
     void ARLClosebtn();
     void ARLClickLink(const QString &link);
 
     //  ARCHIVE PAGE
     void ARSearchbtn();
+    void ARSearchbtnTag();
     void ARClosebtn();
     void ARpopulate();
     void ARsearch();

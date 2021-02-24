@@ -12,7 +12,7 @@
 #include<QGraphicsDropShadowEffect>
 #include<QDesktopServices>
 
-QString Ver = "0.9.4.1";
+QString Ver = "0.9.4.2";
 
 //  WEBSOCKET HANDLER
 QWebSocketServer *m_pWebSocketServer;
@@ -77,11 +77,13 @@ Login::Login(QWidget *parent) :
     //---------------- Connect archive list buttons ----------------------
     connect(ui->ARLCloseBtn, SIGNAL(released()), this, SLOT(ARLClosebtn()));
     connect(ui->ARLSearchBtn, SIGNAL(released()), this, SLOT(ARLSearchbtn()));
+    connect(ui->ARLSearchTags, SIGNAL(released()), this, SLOT(ARLSearchbtnTag()));
     connect(ui->ARLListDisplay, SIGNAL(linkActivated(QString)), this, SLOT(ARLClickLink(QString)));
 
     //---------------- Connect archive buttons ----------------------
     connect(ui->ARCloseBtn, SIGNAL(released()), this, SLOT(ARClosebtn()));
     connect(ui->ARSearchBtn, SIGNAL(released()), this, SLOT(ARSearchbtn()));
+    connect(ui->ARSearchTags, SIGNAL(released()), this, SLOT(ARSearchbtnTag()));
     connect(ui->ARlineEdit, SIGNAL(textChanged(const QString)), this, SLOT(ARsearch()));
     connect(ui->ARListDisplay, SIGNAL(linkActivated(QString)), this, SLOT(ARClickLink(QString)));
 
@@ -110,6 +112,7 @@ void Login::FPSessionbtn(){
     ui->RMTitle->setText("<html><head/><body><p><span style=\" font-size:48pt; font-weight:600; color:#ffffff;\">ROOM</span></p><p><span style=\" font-size:16pt; font-weight:600; color:#ff0000;\">•</span><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\"> = Empty </span><span style=\" font-size:16pt; font-weight:600; color:#4e9a06;\">•</span><span style=\" font-size:16pt; font-weight:600; color:#ffffff;\"> = Password Protected</span></p></body></html>");
     mode = 1;
     ui->stackedWidget->setCurrentIndex(1);
+    ui->RMEnterBtn->setText("Search By Link");
     RMgetroom();
 }
 
@@ -118,6 +121,7 @@ void Login::FPArchivebtn(){
     ui->RMTitle->setText("<html><head/><body><p><span style=\" font-size:48pt; font-weight:600; color:#ffffff;\">ROOM</span></p></html>");
     mode = 3;
     ui->stackedWidget->setCurrentIndex(1);
+    ui->RMEnterBtn->setText("Search By Link/Tags");
     RMgetroom();
 }
 
@@ -373,17 +377,40 @@ void Login::SearchRoom(){
 void Login::ARLClosebtn(){
     mode = 3;
     ui->stackedWidget->setCurrentIndex(1);
-    ui->ARLlineEdit->setText("");
 }
 
 void Login::ARLSearchbtn() {
-    if (ui->ARLlineEdit->text().isEmpty()){
-        request.setUrl(QUrl("http://157.230.241.238/Archive/"));
-    } else {
-        request.setUrl(QUrl("http://157.230.241.238/Archive/?link=" + ui->ARLlineEdit->text()));
-    }
+    bool ok = false;
+    QString DialogText = QInputDialog::getText(this, tr("Search Stream Link"),
+                                         tr("Link:"), QLineEdit::Normal,
+                                         "", &ok);
 
-    manager->get(request);
+    if (ok) {
+        mode = 4;
+        if (DialogText.isEmpty()){
+            request.setUrl(QUrl("http://157.230.241.238/Archive/"));
+        } else {
+            request.setUrl(QUrl("http://157.230.241.238/Archive/?link=" + DialogText));
+        }
+        manager->get(request);
+    }
+}
+
+void Login::ARLSearchbtnTag() {
+    bool ok = false;
+    QString DialogText = QInputDialog::getText(this, tr("Search By Tags (use comma separator, ex: Full, EN, 3D)"),
+                                         tr("Tags (use comma separator, ex: Full, EN, 3D):"), QLineEdit::Normal,
+                                         "", &ok);
+
+    if (ok) {
+        mode = 4;
+        if (DialogText.isEmpty()){
+            request.setUrl(QUrl("http://157.230.241.238/Archive/"));
+        } else {
+            request.setUrl(QUrl("http://157.230.241.238/Archive/?tags=" + DialogText.replace(", ", "_").replace(",", "_")));
+        }
+        manager->get(request);
+    }
 }
 
 void Login::ARLgetlist() {
@@ -461,6 +488,20 @@ void Login::ARSearchbtn() {
     if (ok && !DialogText.isEmpty())   {
         mode = 4;
         request.setUrl(QUrl("http://157.230.241.238/Archive/?room=" + CurrentRoom + "&link=" + DialogText));
+        manager->get(request);
+    }
+
+}
+
+void Login::ARSearchbtnTag() {
+    bool ok = false;
+    QString DialogText = QInputDialog::getText(this, tr("Search By Tags"),
+                                         tr("Tags (use comma separator, ex: Full, EN, 3D):"), QLineEdit::Normal,
+                                         "", &ok);
+
+    if (ok && !DialogText.isEmpty())   {
+        mode = 4;
+        request.setUrl(QUrl("http://157.230.241.238/Archive/?room=" + CurrentRoom + "&tags=" + DialogText.replace(", ", "_").replace(",", "_")));
         manager->get(request);
     }
 
